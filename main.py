@@ -1,31 +1,25 @@
-from pyrogram import Client
-from flask import Flask
-from threading import Thread
 import os
 import asyncio
+from pyrogram import Client
 
-# إعدادات البوت
+# البيانات الأساسية
 api_id = 36078475
 api_hash = "1f2795d538fdb50a715889e1bf859319"
 bot_token = os.environ.get("BOT_TOKEN")
 
-app = Client("BufferBot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
+# إنشاء البوت
+app = Client("bover_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
-# خادم Flask لإبقاء البوت أونلاين
-server = Flask(__name__)
-@server.route('/')
-def home():
-    return "بوفر يعمل بكامل طاقته!"
+# أمر بسيط للتجربة
+@app.on_message(lambda client, message: True)
+async def handle_message(client, message):
+    if message.text == "/start":
+        await message.reply_text("بوفر يعمل بكامل طاقته! 🚀")
 
-def run_server():
-    server.run(host='0.0.0.0', port=10000)
-
-# تشغيل البوت و Flask معاً بطريقة صحيحة
 async def main():
     await app.start()
-    print("البوت يعمل الآن!")
-    await asyncio.Event().wait() # إبقاء البوت يعمل
+    print("البوت يعمل الآن بنجاح!")
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
-    Thread(target=run_server).start()
     asyncio.run(main())
